@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
-//import './App.css'
+import './App.css'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { Container } from '@mui/system'
 import { NewNote } from './assets/components'

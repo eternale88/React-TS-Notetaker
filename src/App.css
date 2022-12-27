@@ -32,10 +32,8 @@
   }
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+a:-webkit-any-link {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
 }

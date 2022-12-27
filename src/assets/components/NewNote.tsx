@@ -5,7 +5,7 @@ export const NewNote = () => {
   return (
     <>
       <Typography variant="h2" my={4}>
-        new note
+        New Note
       </Typography>
       <NoteForm />
     </>
