@@ -40,6 +40,7 @@ export const NoteForm = ({ onSubmit }: NoteFormProps) => {
       markdown: markdownRef.current!.value,
       tags: [],
     })
+    console.log(e)
   }
   return (
     <>
@@ -79,8 +80,6 @@ export const NoteForm = ({ onSubmit }: NoteFormProps) => {
                     }),
                     placeholder: (baseStyles) => ({
                       ...baseStyles,
-                      fontSize: '16px',
-                      color: 'rgba(0, 0, 0, 0.87)',
                       opacity: 0,
                     }),
                   }}
