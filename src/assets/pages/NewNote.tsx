@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import { NoteForm } from './index'
+import { NoteForm } from '../components/index'
 
 export const NewNote = () => {
   return (
