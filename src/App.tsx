@@ -4,8 +4,21 @@ import './App.css'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { Container } from '@mui/system'
 import { NewNote } from './assets/pages'
+import { Tag } from './assets/interfaces'
+import useLocalStorage from './assets/hooks/useLocalStorage'
 
+//raw types because retrieve from local storage which stores as a string
+export interface RawNote {
+  id: string
+}
+export interface RawNoteData {
+  title: string
+  markdown: string
+  tagIds: string[]
+}
 function App() {
+  const [notes, setNotes] = useLocalStorage<RawNote[]>('Notes', [])
+  const [tags, setTags] = useLocalStorage<Tag[]>('Tags', [])
   return (
     <Container maxWidth="lg">
       <Routes>
