@@ -1,24 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useMemo, useState } from 'react'
 import './App.css'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { Container } from '@mui/system'
 import { NewNote } from './assets/pages'
-import { Tag } from './assets/interfaces'
+import { NoteData, Tag } from './assets/interfaces'
 import useLocalStorage from './assets/hooks/useLocalStorage'
+import { v4 as uuidV4 } from 'uuid'
+import { useNotesContext } from './assets/context/NotesContext'
 
-//raw types because retrieve from local storage which stores as a string
-export interface RawNote {
-  id: string
-}
-export interface RawNoteData {
-  title: string
-  markdown: string
-  tagIds: string[]
-}
 function App() {
-  const [notes, setNotes] = useLocalStorage<RawNote[]>('Notes', [])
-  const [tags, setTags] = useLocalStorage<Tag[]>('Tags', [])
+  const { notes, tags } = useNotesContext()
+
+  const notesWithTags = useMemo(() => {
+    return notes.map((note) => {
+      return {
+        ...note,
+        tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
+      }
+    })
+  }, [notes, tags])
+
   return (
     <Container maxWidth="lg">
       <Routes>

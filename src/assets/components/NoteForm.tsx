@@ -15,6 +15,8 @@ import { FormEvent, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import CreatableReactSelect from 'react-select/creatable'
 import { NoteData, Tag } from '../interfaces'
+import { v4 as uuidV4 } from 'uuid'
+import { useNotesContext } from '../context/NotesContext'
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -25,9 +27,12 @@ const Item = styled(Paper)(({ theme }) => ({
 
 interface NoteFormProps {
   onSubmit: (data: NoteData) => void
+  onAddTag: (data: Tag) => void
 }
 
-export const NoteForm = ({ onSubmit }: NoteFormProps) => {
+export const NoteForm = () => {
+  const { onCreateNote, onAddTag } = useNotesContext()
+
   const titleRef = useRef<HTMLInputElement>(null)
   const markdownRef = useRef<HTMLTextAreaElement>(null)
 
@@ -35,7 +40,7 @@ export const NoteForm = ({ onSubmit }: NoteFormProps) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    onSubmit({
+    onCreateNote({
       title: titleRef.current!.value,
       markdown: markdownRef.current!.value,
       tags: [],
@@ -62,6 +67,11 @@ export const NoteForm = ({ onSubmit }: NoteFormProps) => {
               <FormControl id="tags" fullWidth sx={{ textAlign: 'left' }}>
                 <InputLabel htmlFor="tags">Tags</InputLabel>
                 <CreatableReactSelect
+                  onCreateOption={(label) => {
+                    const newTag = { id: uuidV4(), label }
+                    onAddTag(newTag)
+                    setSelectedTags((prev) => [...prev, newTag])
+                  }}
                   isMulti
                   value={selectedTags.map((tag) => {
                     return { label: tag.label, value: tag.id }
