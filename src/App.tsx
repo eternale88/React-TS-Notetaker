@@ -3,9 +3,6 @@ import './App.css'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { Container } from '@mui/system'
 import { NewNote } from './assets/pages'
-import { NoteData, Tag } from './assets/interfaces'
-import useLocalStorage from './assets/hooks/useLocalStorage'
-import { v4 as uuidV4 } from 'uuid'
 import { useNotesContext } from './assets/context/NotesContext'
 
 function App() {

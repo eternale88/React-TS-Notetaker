@@ -25,25 +25,26 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }))
 
-interface NoteFormProps {
-  onSubmit: (data: NoteData) => void
-  onAddTag: (data: Tag) => void
-}
+// interface NoteFormProps {
+//   onSubmit: (data: NoteData) => void
+//   onAddTag: (data: Tag) => void
+//}
 
 export const NoteForm = () => {
-  const { onCreateNote, onAddTag } = useNotesContext()
+  const { onCreateNote, onAddTag, tags } = useNotesContext()
 
   const titleRef = useRef<HTMLInputElement>(null)
   const markdownRef = useRef<HTMLTextAreaElement>(null)
 
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(tags)
 
   const handleSubmit = (e: FormEvent) => {
+    console.log(titleRef.current!.value, markdownRef)
     e.preventDefault()
     onCreateNote({
       title: titleRef.current!.value,
       markdown: markdownRef.current!.value,
-      tags: [],
+      tags: selectedTags,
     })
     console.log(e)
   }
@@ -54,7 +55,7 @@ export const NoteForm = () => {
           <Grid item xs={6}>
             <Item>
               <TextField
-                ref={titleRef}
+                inputRef={titleRef}
                 fullWidth
                 id="title"
                 label="Title"
@@ -72,6 +73,12 @@ export const NoteForm = () => {
                     onAddTag(newTag)
                     setSelectedTags((prev) => [...prev, newTag])
                   }}
+                  options={tags.map((tag) => {
+                    return {
+                      label: tag.label,
+                      value: tag.id,
+                    }
+                  })}
                   isMulti
                   value={selectedTags.map((tag) => {
                     return { label: tag.label, value: tag.id }
@@ -99,7 +106,9 @@ export const NoteForm = () => {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              ref={markdownRef as unknown as React.RefObject<HTMLDivElement>}
+              inputRef={
+                markdownRef as unknown as React.RefObject<HTMLDivElement>
+              }
               fullWidth
               multiline
               id="body"
