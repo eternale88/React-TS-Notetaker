@@ -12,13 +12,13 @@ import {
   styled,
 } from '@mui/material'
 import { FormEvent, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import CreatableReactSelect from 'react-select/creatable'
-import { NoteData, Tag } from '../interfaces'
+import { Tag } from '../interfaces'
 import { v4 as uuidV4 } from 'uuid'
 import { useNotesContext } from '../context/NotesContext'
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+export const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#fff',
   ...theme.typography.body2,
   padding: theme.spacing(2),
   textAlign: 'center',
@@ -31,6 +31,8 @@ const Item = styled(Paper)(({ theme }) => ({
 //}
 
 export const NoteForm = () => {
+  const navigate = useNavigate()
+
   const { onCreateNote, onAddTag, tags } = useNotesContext()
 
   const titleRef = useRef<HTMLInputElement>(null)
@@ -46,7 +48,7 @@ export const NoteForm = () => {
       markdown: markdownRef.current!.value,
       tags: selectedTags,
     })
-    console.log(e)
+    navigate('..')
   }
   return (
     <>
@@ -66,7 +68,6 @@ export const NoteForm = () => {
           <Grid item xs={6}>
             <Item>
               <FormControl id="tags" fullWidth sx={{ textAlign: 'left' }}>
-                <InputLabel htmlFor="tags">Tags</InputLabel>
                 <CreatableReactSelect
                   onCreateOption={(label) => {
                     const newTag = { id: uuidV4(), label }
@@ -80,6 +81,7 @@ export const NoteForm = () => {
                     }
                   })}
                   isMulti
+                  placeholder="Tags"
                   value={selectedTags.map((tag) => {
                     return { label: tag.label, value: tag.id }
                   })}
@@ -97,7 +99,6 @@ export const NoteForm = () => {
                     }),
                     placeholder: (baseStyles) => ({
                       ...baseStyles,
-                      opacity: 0,
                     }),
                   }}
                 />

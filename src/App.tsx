@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { Container } from '@mui/system'
 import { NewNote } from './assets/pages'
 import { useNotesContext } from './assets/context/NotesContext'
+import { NoteList } from './assets/components'
 
 function App() {
   const { notes, tags } = useNotesContext()
@@ -20,7 +21,7 @@ function App() {
   return (
     <Container maxWidth="lg">
       <Routes>
-        <Route path="/" element={<h2>hello</h2>} />
+        <Route path="/" element={<NoteList />} />
         <Route path="/new" element={<NewNote />} />
         <Route path="/:id">
           {/* index matches id to individual routes*/}
