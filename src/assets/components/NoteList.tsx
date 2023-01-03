@@ -1,6 +1,9 @@
 import {
+  Avatar,
   Box,
   Button,
+  Card,
+  CardContent,
   FormControl,
   Grid,
   Stack,
@@ -17,27 +20,62 @@ import { Tag } from '../interfaces'
 interface SimplifiedNote {
   id: string
   title: string
-  tagIds: Tag[] | string[]
+  tagIds: Tag[]
 }
 export const NoteList = () => {
   const { tags, notes } = useNotesContext()
   const [title, setTitle] = useState('')
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags)
 
+  const notesWithTags = useMemo(() => {
+    return notes.map((note) => {
+      return {
+        ...note,
+        tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
+      }
+    })
+  }, [notes, tags])
   const filteredNotes = useMemo(() => {
-    return notes.filter(
-      (note) =>
-        title === '' ||
-        (note.title.toLowerCase().includes(title.toLowerCase()) &&
-          selectedTags.length === 0) ||
-        selectedTags.every((tag) =>
-          note.tagIds.some((noteTag) => noteTag === tag.id)
-        )
-    )
+    return notesWithTags.filter((note) => {
+      return (
+        (title === '' ||
+          note.title.toLowerCase().includes(title.toLowerCase())) &&
+        (selectedTags.length === 0 ||
+          selectedTags.every((tag) =>
+            note.tags.some((noteTag) => noteTag.id === tag.id)
+          ))
+      )
+    })
   }, [title, selectedTags, notes])
 
   const NoteCard = ({ id, title, tagIds }: SimplifiedNote) => {
-    return <>Hi</>
+    return (
+      <Card
+      // as={Link}
+      // to={`/${id}`}
+      // className={`h-100 text-reset text-decoration-none ${styles.card}`}
+      >
+        <CardContent>
+          <Stack
+            gap={2}
+            alignItems="center"
+            justifyContent="center"
+            height="100%"
+          >
+            <span className="fs-5">{title}</span>
+            {tags.length > 0 && (
+              <Stack gap={1} className="justify-content-center flex-wrap">
+                {tags.map((tag) => (
+                  <Avatar className="text-truncate" key={tag.id}>
+                    {tag.label}
+                  </Avatar>
+                ))}
+              </Stack>
+            )}
+          </Stack>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
@@ -109,13 +147,11 @@ export const NoteList = () => {
               </FormControl>
             </Item>
           </Grid>
-          <Grid item xs={1} md={2} lg={3} xl={4} gap={1}>
-            {filteredNotes.map((note) => (
-              <Item key={note.id}>
-                <NoteCard {...note} />
-              </Item>
-            ))}
-          </Grid>
+          {filteredNotes.map((note) => (
+            <Grid key={note.id} item xs={6} md={2} lg={3} xl={4} gap={2}>
+              <NoteCard id={note.id} tagIds={note.tags} title={note.title} />
+            </Grid>
+          ))}
         </Grid>
       </form>
     </>

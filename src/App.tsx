@@ -9,15 +9,6 @@ import { NoteList } from './assets/components'
 function App() {
   const { notes, tags } = useNotesContext()
 
-  const notesWithTags = useMemo(() => {
-    return notes.map((note) => {
-      return {
-        ...note,
-        tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
-      }
-    })
-  }, [notes, tags])
-
   return (
     <Container maxWidth="lg">
       <Routes>
