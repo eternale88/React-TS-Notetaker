@@ -36,18 +36,10 @@ const StyledCard = styled(Card)({
 })
 
 export const NoteList = () => {
-  const { tags, notes } = useNotesContext()
+  const { tags, notes, notesWithTags } = useNotesContext()
   const [title, setTitle] = useState('')
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags)
 
-  const notesWithTags = useMemo(() => {
-    return notes.map((note) => {
-      return {
-        ...note,
-        tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
-      }
-    })
-  }, [notes, tags])
   const filteredNotes = useMemo(() => {
     return notesWithTags.filter((note) => {
       return (
@@ -63,7 +55,7 @@ export const NoteList = () => {
 
   const NoteCard = ({ id, title, tagIds }: SimplifiedNote) => {
     return (
-      <Link to="/">
+      <Link to={`/${id}`}>
         <StyledCard
         // as={Link}
         // to={`/${id}`}
@@ -101,7 +93,7 @@ export const NoteList = () => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <Typography variant="h2">Notes</Typography>
@@ -170,6 +162,7 @@ export const NoteList = () => {
           </Grid>
           {filteredNotes.map((note) => (
             <Grid
+              flexGrow={1}
               key={note.id}
               item
               xs={'auto'}

@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useMemo } from 'react'
 import { NoteData, Tag } from '../interfaces'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { v4 as uuidV4 } from 'uuid'
@@ -18,7 +18,16 @@ export interface NewNoteProps {
   notes: RawNote[]
   tags: Tag[]
   setTags: (tags: Tag[]) => void
+  notesWithTags: NoteWithTags
 }
+
+type NoteWithTags = {
+  tags: Tag[]
+  id: string
+  title: string
+  markdown: string
+  tagIds: string[]
+}[]
 
 const NotesContext = createContext<NewNoteProps>(null!)
 
@@ -45,10 +54,21 @@ const NotesProvider = ({ children }: childProp): React.ReactNode => {
   const onAddTag = (tag: Tag) => {
     setTags((prev) => [...prev, tag])
   }
+
+  const notesWithTags = useMemo(() => {
+    return notes.map((note) => {
+      return {
+        ...note,
+        tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
+      }
+    })
+  }, [notes, tags])
+  console.log()
+
   return (
     <div>
       <NotesContext.Provider
-        value={{ onCreateNote, notes, tags, setTags, onAddTag }}
+        value={{ onCreateNote, notes, tags, setTags, onAddTag, notesWithTags }}
       >
         {children}
       </NotesContext.Provider>
