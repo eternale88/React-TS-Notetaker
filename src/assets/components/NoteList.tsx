@@ -56,11 +56,7 @@ export const NoteList = () => {
   const NoteCard = ({ id, title, tagIds }: SimplifiedNote) => {
     return (
       <Link to={`/${id}`}>
-        <StyledCard
-        // as={Link}
-        // to={`/${id}`}
-        // className={`h-100 text-reset text-decoration-none ${styles.card}`}
-        >
+        <StyledCard>
           <CardContent>
             <Stack
               gap={2}

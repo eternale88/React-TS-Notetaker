@@ -1,5 +1,5 @@
-import { createContext, useContext, useMemo } from 'react'
-import { NoteData, Tag } from '../interfaces'
+import { createContext, useContext, useMemo, useState } from 'react'
+import { Note, NoteData, Tag } from '../interfaces'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { v4 as uuidV4 } from 'uuid'
 
@@ -19,6 +19,10 @@ export interface NewNoteProps {
   tags: Tag[]
   setTags: (tags: Tag[]) => void
   notesWithTags: NoteWithTags
+  isEditing: boolean
+  setIsEditing: (isEditing: boolean) => void
+  onEditNote: (id: string, data: NoteData) => void
+  setNotes: (notes: RawNote[]) => void
 }
 
 type NoteWithTags = {
@@ -38,11 +42,15 @@ type childProp = {
 const NotesProvider = ({ children }: childProp): React.ReactNode => {
   const [notes, setNotes] = useLocalStorage<RawNote[]>('Notes', [])
   const [tags, setTags] = useLocalStorage<Tag[]>('Tags', [])
+  const [isEditing, setIsEditing] = useState<boolean>(false)
+
+  const onAddTag = (tag: Tag) => {
+    setTags((prev) => [...prev, tag])
+  }
 
   const onCreateNote = ({ tags, ...data }: NoteData) => {
     // must convert NoteData type to RawNote for localStorage
     //assign real id, and give tagIds our real tag ids from user input
-
     setNotes((prevNotes) => {
       return [
         ...prevNotes,
@@ -51,8 +59,16 @@ const NotesProvider = ({ children }: childProp): React.ReactNode => {
     })
   }
 
-  const onAddTag = (tag: Tag) => {
-    setTags((prev) => [...prev, tag])
+  const onEditNote = (id: string, { tags, ...data }: NoteData) => {
+    setNotes((prevNotes) => {
+      return prevNotes.map((note) => {
+        if (note.id === id) {
+          return { ...note, ...data, tagIds: tags.map((tag) => tag.id) }
+        } else {
+          return note
+        }
+      })
+    })
   }
 
   const notesWithTags = useMemo(() => {
@@ -68,7 +84,18 @@ const NotesProvider = ({ children }: childProp): React.ReactNode => {
   return (
     <div>
       <NotesContext.Provider
-        value={{ onCreateNote, notes, tags, setTags, onAddTag, notesWithTags }}
+        value={{
+          notes,
+          tags,
+          setTags,
+          onAddTag,
+          notesWithTags,
+          isEditing,
+          setIsEditing,
+          setNotes,
+          onCreateNote,
+          onEditNote,
+        }}
       >
         {children}
       </NotesContext.Provider>

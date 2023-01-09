@@ -1,9 +1,12 @@
 import { Avatar, Box, Button, Grid, Stack, Typography } from '@mui/material'
 import { useNote } from './NoteLayout'
 import { Link } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
+import { useNotesContext } from '../context/NotesContext'
 
 export const Note = () => {
-  const { title, tags } = useNote()
+  const { title, tags, id, markdown } = useNote()
+  const { setIsEditing } = useNotesContext()
   //console.log(note)
   return (
     <>
@@ -15,7 +18,6 @@ export const Note = () => {
               direction="row"
               sx={{ justifyContent: 'flex-start' }}
             >
-              {' '}
               <Typography variant="h2">{title}</Typography>
             </Stack>
           </Grid>
@@ -25,12 +27,16 @@ export const Note = () => {
               direction="row"
               sx={{ justifyContent: 'flex-end' }}
             >
-              <Button variant="contained">Edit</Button>
-              <Link to="/new">
-                <Button type="submit" color="error" variant="outlined">
-                  Delete
+              <Link to={`/${id}/edit`}>
+                <Button onClick={() => setIsEditing(true)} variant="contained">
+                  Edit
                 </Button>
               </Link>
+
+              <Button type="submit" color="error" variant="outlined">
+                Delete
+              </Button>
+
               <Link to="..">
                 <Button variant="outlined" color={'secondary'}>
                   Back
@@ -63,6 +69,9 @@ export const Note = () => {
                 ))}
               </Stack>
             )}
+          </Grid>
+          <Grid item xs={'auto'} sm={12}>
+            <ReactMarkdown>{markdown}</ReactMarkdown>
           </Grid>
         </Grid>
       </Box>

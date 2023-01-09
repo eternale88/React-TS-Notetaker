@@ -17,6 +17,7 @@ import CreatableReactSelect from 'react-select/creatable'
 import { Tag } from '../interfaces'
 import { v4 as uuidV4 } from 'uuid'
 import { useNotesContext } from '../context/NotesContext'
+import { useNote } from './NoteLayout'
 export const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
   ...theme.typography.body2,
@@ -25,15 +26,13 @@ export const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }))
 
-// interface NoteFormProps {
-//   onSubmit: (data: NoteData) => void
-//   onAddTag: (data: Tag) => void
-//}
-
 export const NoteForm = () => {
+  const { title, markdown, id } = useNote()
+
   const navigate = useNavigate()
 
-  const { onCreateNote, onAddTag, tags } = useNotesContext()
+  const { onCreateNote, onEditNote, onAddTag, tags, isEditing, setIsEditing } =
+    useNotesContext()
 
   const titleRef = useRef<HTMLInputElement>(null)
   const markdownRef = useRef<HTMLTextAreaElement>(null)
@@ -43,6 +42,7 @@ export const NoteForm = () => {
   const handleSubmit = (e: FormEvent) => {
     console.log(titleRef.current!.value, markdownRef)
     e.preventDefault()
+
     onCreateNote({
       title: titleRef.current!.value,
       markdown: markdownRef.current!.value,
@@ -50,9 +50,22 @@ export const NoteForm = () => {
     })
     navigate('..')
   }
+
+  const handleEditSubmit = (e: FormEvent) => {
+    console.log(titleRef.current!.value, markdownRef)
+    e.preventDefault()
+
+    onEditNote(id, {
+      title: titleRef.current!.value,
+      markdown: markdownRef.current!.value,
+      tags: selectedTags,
+    })
+    setIsEditing(false)
+    navigate('..')
+  }
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={!isEditing ? handleSubmit : handleEditSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Item>
@@ -61,6 +74,7 @@ export const NoteForm = () => {
                 fullWidth
                 id="title"
                 label="Title"
+                defaultValue={title}
                 required
               />
             </Item>
@@ -110,6 +124,7 @@ export const NoteForm = () => {
               inputRef={
                 markdownRef as unknown as React.RefObject<HTMLDivElement>
               }
+              defaultValue={markdown}
               fullWidth
               multiline
               id="body"
