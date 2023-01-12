@@ -1,12 +1,14 @@
 import { Avatar, Box, Button, Grid, Stack, Typography } from '@mui/material'
 import { useNote } from './NoteLayout'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import { useNotesContext } from '../context/NotesContext'
 
 export const Note = () => {
   const { title, tags, id, markdown } = useNote()
-  const { setIsEditing } = useNotesContext()
+  const { setIsEditing, onDeleteNote } = useNotesContext()
+  const navigate = useNavigate()
+
   //console.log(note)
   return (
     <>
@@ -33,7 +35,15 @@ export const Note = () => {
                 </Button>
               </Link>
 
-              <Button type="submit" color="error" variant="outlined">
+              <Button
+                onClick={() => {
+                  onDeleteNote(id)
+                  navigate('/')
+                }}
+                type="submit"
+                color="error"
+                variant="outlined"
+              >
                 Delete
               </Button>
 

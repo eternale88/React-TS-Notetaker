@@ -23,6 +23,8 @@ export interface NewNoteProps {
   setIsEditing: (isEditing: boolean) => void
   onEditNote: (id: string, data: NoteData) => void
   setNotes: (notes: RawNote[]) => void
+  onDeleteNote: (id: string) => void
+  onDeleteTag: (id: string) => void
 }
 
 type NoteWithTags = {
@@ -71,6 +73,17 @@ const NotesProvider = ({ children }: childProp): React.ReactNode => {
     })
   }
 
+  const onDeleteNote = (id: string) => {
+    setNotes((prevNotes) => {
+      return prevNotes.filter((note) => note.id !== id)
+    })
+  }
+
+  const onDeleteTag = (id: string) => {
+    setTags((prevTags) => {
+      return prevTags.filter((tag) => tag.id !== id)
+    })
+  }
   const notesWithTags = useMemo(() => {
     return notes.map((note) => {
       return {
@@ -79,7 +92,7 @@ const NotesProvider = ({ children }: childProp): React.ReactNode => {
       }
     })
   }, [notes, tags])
-  console.log()
+  console.log(notesWithTags)
 
   return (
     <div>
@@ -95,6 +108,8 @@ const NotesProvider = ({ children }: childProp): React.ReactNode => {
           setNotes,
           onCreateNote,
           onEditNote,
+          onDeleteNote,
+          onDeleteTag,
         }}
       >
         {children}

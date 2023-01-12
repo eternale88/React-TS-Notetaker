@@ -19,6 +19,7 @@ import ReactSelect from 'react-select'
 import { useNotesContext } from '../context/NotesContext'
 import { useMemo, useState } from 'react'
 import { Tag } from '../interfaces'
+import { EditTagsModal } from './EditTagsModal'
 
 interface SimplifiedNote {
   id: string
@@ -39,6 +40,7 @@ export const NoteList = () => {
   const { tags, notes, notesWithTags } = useNotesContext()
   const [title, setTitle] = useState('')
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags)
+  const [openDialog, setOpenDialog] = useState(false)
 
   const filteredNotes = useMemo(() => {
     return notesWithTags.filter((note) => {
@@ -52,6 +54,11 @@ export const NoteList = () => {
       )
     })
   }, [title, selectedTags, notes])
+  console.log(filteredNotes)
+
+  const handleClickOpen = () => {
+    setOpenDialog(true)
+  }
 
   const NoteCard = ({ id, title, tagIds }: SimplifiedNote) => {
     return (
@@ -69,7 +76,7 @@ export const NoteList = () => {
               </Typography>
               {tags.length > 0 && (
                 <Stack gap={1}>
-                  {tags.map((tag) => (
+                  {tagIds.map((tag) => (
                     <Avatar
                       sx={{ width: 'auto', padding: 0.25 }}
                       variant="rounded"
@@ -101,7 +108,9 @@ export const NoteList = () => {
                   Create
                 </Button>
               </Link>
-              <Button variant="contained">Edit Tags</Button>
+              <Button variant="contained" onClick={() => handleClickOpen()}>
+                Edit Tags
+              </Button>
             </Stack>
           </Grid>
         </Grid>
@@ -173,6 +182,11 @@ export const NoteList = () => {
           ))}
         </Grid>
       </form>
+      <EditTagsModal
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        tags={tags}
+      />
     </>
   )
 }

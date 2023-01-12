@@ -1,11 +1,7 @@
 import {
-  Box,
   Button,
   FormControl,
-  FormHelperText,
   Grid,
-  Input,
-  InputLabel,
   Paper,
   Stack,
   TextField,
@@ -18,6 +14,7 @@ import { Tag } from '../interfaces'
 import { v4 as uuidV4 } from 'uuid'
 import { useNotesContext } from '../context/NotesContext'
 import { useNote } from './NoteLayout'
+
 export const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
   ...theme.typography.body2,
@@ -27,7 +24,7 @@ export const Item = styled(Paper)(({ theme }) => ({
 }))
 
 export const NoteForm = () => {
-  const { title, markdown, id } = useNote()
+  const noteContext = useNote()
 
   const navigate = useNavigate()
 
@@ -55,7 +52,7 @@ export const NoteForm = () => {
     console.log(titleRef.current!.value, markdownRef)
     e.preventDefault()
 
-    onEditNote(id, {
+    onEditNote(noteContext.id, {
       title: titleRef.current!.value,
       markdown: markdownRef.current!.value,
       tags: selectedTags,
@@ -74,7 +71,7 @@ export const NoteForm = () => {
                 fullWidth
                 id="title"
                 label="Title"
-                defaultValue={title}
+                defaultValue={isEditing ? noteContext.title : ''}
                 required
               />
             </Item>
@@ -124,7 +121,7 @@ export const NoteForm = () => {
               inputRef={
                 markdownRef as unknown as React.RefObject<HTMLDivElement>
               }
-              defaultValue={markdown}
+              defaultValue={isEditing ? noteContext.markdown : ''}
               fullWidth
               multiline
               id="body"
