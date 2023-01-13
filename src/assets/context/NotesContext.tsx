@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react'
-import { Note, NoteData, Tag } from '../interfaces'
+import { NoteData, Tag } from '../interfaces'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { v4 as uuidV4 } from 'uuid'
 
@@ -25,6 +25,7 @@ export interface NewNoteProps {
   setNotes: (notes: RawNote[]) => void
   onDeleteNote: (id: string) => void
   onDeleteTag: (id: string) => void
+  onEditTag: (id: string, label: string) => void
 }
 
 type NoteWithTags = {
@@ -48,6 +49,17 @@ const NotesProvider = ({ children }: childProp): React.ReactNode => {
 
   const onAddTag = (tag: Tag) => {
     setTags((prev) => [...prev, tag])
+  }
+  const onEditTag = (id: string, label: string) => {
+    setTags((prevTag) => {
+      return prevTag.map((tag) => {
+        if (tag.id === id) {
+          return { ...tag, label }
+        } else {
+          return tag
+        }
+      })
+    })
   }
 
   const onCreateNote = ({ tags, ...data }: NoteData) => {
@@ -92,7 +104,6 @@ const NotesProvider = ({ children }: childProp): React.ReactNode => {
       }
     })
   }, [notes, tags])
-  console.log(notesWithTags)
 
   return (
     <div>
@@ -110,6 +121,7 @@ const NotesProvider = ({ children }: childProp): React.ReactNode => {
           onEditNote,
           onDeleteNote,
           onDeleteTag,
+          onEditTag,
         }}
       >
         {children}

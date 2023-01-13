@@ -3,9 +3,7 @@ import {
   Box,
   Button,
   Card,
-  CardActionArea,
   CardContent,
-  CardHeader,
   FormControl,
   Grid,
   Stack,
@@ -54,7 +52,6 @@ export const NoteList = () => {
       )
     })
   }, [title, selectedTags, notes])
-  console.log(filteredNotes)
 
   const handleClickOpen = () => {
     setOpenDialog(true)

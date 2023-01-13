@@ -6,10 +6,12 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
   Grid,
   Stack,
   TextField,
 } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 import { Tag } from '../interfaces'
 import { Item } from './NoteForm'
 import { useNotesContext } from '../context/NotesContext'
@@ -24,7 +26,7 @@ export const EditTagsModal = ({
   setOpenDialog,
   tags,
 }: EditModalProps) => {
-  const { onDeleteTag } = useNotesContext()
+  const { onDeleteTag, onEditTag } = useNotesContext()
 
   const handleClose = () => {
     setOpenDialog(false)
@@ -32,8 +34,29 @@ export const EditTagsModal = ({
 
   return (
     <div>
-      <Dialog open={openDialog} onClose={handleClose}>
-        <DialogTitle>Edit Tags</DialogTitle>
+      <Dialog
+        open={openDialog}
+        onClose={handleClose}
+        sx={{
+          '& .MuiPaper-root': {
+            width: 600,
+            maxWidth: 600,
+          },
+        }}
+      >
+        <Stack
+          direction={'row'}
+          alignItems="center"
+          justifyContent="space-between"
+          marginRight={3}
+        >
+          <DialogTitle>Edit Tags</DialogTitle>
+          <Button onClick={handleClose} sx={{ color: '#5f5b5b' }}>
+            <CloseIcon />
+          </Button>
+        </Stack>
+        <Divider />
+
         <DialogContent>
           <form style={{ marginTop: '12px' }}>
             {tags.map((tag) => (
@@ -43,19 +66,26 @@ export const EditTagsModal = ({
                 alignItems="center"
                 justifyContent="space-between"
                 gap={2}
+                marginY={2}
               >
                 <TextField
-                  // sx={{
-                  //   maxWidth: 500,
-                  // }}
                   autoFocus
-                  margin="dense"
                   id="name"
                   label={tag.label}
                   type="text"
                   fullWidth
+                  value={tag.label}
+                  onChange={(e) => onEditTag(tag.id, e.target.value)}
                 />
-                <Button onClick={() => onDeleteTag(tag.id)} variant="outlined">
+                <Button
+                  color="error"
+                  onClick={() => onDeleteTag(tag.id)}
+                  variant="outlined"
+                  sx={{
+                    padding: '16.5px 14px',
+                    lineHeight: '1.4375em',
+                  }}
+                >
                   &times;
                 </Button>
               </Stack>
