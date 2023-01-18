@@ -16,16 +16,4 @@ To get better at building apps in React, maintain some knowledge of TS and Conte
 ## License
 
 &copy; 2023 Ethan Robbins
-# Issues encountered and their fix
 
-#### React Router Fix
-
-(Fix)[https://dev.to/dance2die/page-not-found-on-netlify-with-react-router-58mc]
-
-#### CRA Fix
-
-```
-
-"build": "CI= react-scripts build",
-
-```
