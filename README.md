@@ -19,7 +19,6 @@ For multiselect dropdowns that support tag creation.
 ## Material UI
 
 [Material UI - Main Docs](https://mui.com/material-ui/getting-started/overview/)
-For multiselect dropdowns that support tag creation.
 
 
 
