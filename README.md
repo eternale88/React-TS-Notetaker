@@ -8,7 +8,19 @@ A React note taking app I  built with  React v18, HTML5, Material UI v5 and Type
 
 ## Motivation
 
-To get better at building apps in React, maintain some knowledge of TS and Context gained in previous job,  and personal enrichment. 
+To get better at building apps in React, maintain some knowledge of TS and Context gained in previous job, and personal enrichment. 
+
+
+## React Select
+
+[React Select - Main Docs](https://react-select.com/home)
+For multiselect dropdowns that support tag creation.
+
+## Material UI
+
+[Material UI - Main Docs](https://mui.com/material-ui/getting-started/overview/)
+For multiselect dropdowns that support tag creation.
+
 
 
 
